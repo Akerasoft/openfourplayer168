@@ -56,3 +56,7 @@ dkms.conf
 
 # list files from assembler
 *.lst
+
+# Microchip Studio is Visual Studio
+.vs
+Debug

@@ -1,31 +1,10 @@
-;; ATMEGA168
-;; (c) Akerasoft 2021
-;; 4 Player Adapter compatible with NES
-;;
-
-#define _SFR_ASM_COMPAT 1  /* Not sure when/if this is needed */
-#define __SFR_OFFSET 0
-#include <avr/io.h>
-
-; I/O Constants
-;#define PINB              0x3
-;#define PINC              0x6
-;#define PIND              0x8
-;#define DDRB              0x4
-;#define DDRC              0x7
-;#define DDRD              0xa
-;#define PORTB             0x5
-;#define PORTC             0x8
-;#define PORTD             0xb
-;#define MCUCR             0x35
-;#define PCMSK0            0x6b
-;#define PCMSK1            0x6c
-;#define PCMSK2            0x6d
-;#define PCICR             0x68
-;#define EIMSK             0x1D
-;#define EICRA             0x69
-;#define SPH               
-;#define SPL               
+;
+; openfourplayer168.asm
+;
+; Created   : 1/3/2022 11:03:24 AM
+; Author    : Akerasoft
+; Developer : Robert Kolski
+;
 
 ; PIN D / PORT D
 #define NES_PORT1_CLK     2
@@ -57,9 +36,8 @@
 ; NOTE r16 and r17 are for general use
 
 
-.section .text ;; .cseg is called .text
+.cseg
 .org 0
-.global init
 init:
 ;; INTERRUPT VECTORS
 ;; there are 26 of them on ATMEGA168
@@ -152,30 +130,24 @@ jmp undefined_interrupt
 ; 20MHz crystal with divide by 1 is recommended.
 
 
-; warning avr-gcc and associated assembler does not warn about alignment
-; but linker will fail if .byte 0 is not added below in 3 places
 COPYRIGHT:
-	.asciz "(c) AKERASOFT 2021"
-	.byte  0
+	.db "(c) AKERASOFT 2021", 0,0
 AUTHOR:
-	.asciz "author: Robert Kolski"
+	.db "author: Robert Kolski", 0
 PHONE:
-	.asciz "phone: +1 (805) 978-2190"
-	.byte  0
+	.db "phone: +1 (805) 978-2190", 0,0
 EMAIL:
-	.asciz "email: robert.kolski@akeraiotitasoft.com"
-	.byte  0
+	.db "email: robert.kolski@akeraiotitasoft.com", 0,0
 
 ; program execution begins here
 ;;-------------------------------
 ;; BEGINING OF main
 ;;-------------------------------
-.global main
 main:
     ; set stack pointer to top of RAM
-	ldi  r16, hi8(RAMEND)
+	ldi  r16, high(RAMEND)
 	out  SPH,r16
-	ldi  r16, lo8(RAMEND)
+	ldi  r16, low(RAMEND)
 	out  SPL,r16
 	
 	clr  r1                 ; make r1 = 0
@@ -221,8 +193,8 @@ main:
 	sbrc r16, FOURPLAYER_ENABLE ; skip next statement if FOURPLAYER_ENABLE is LOW
 	ser  FOURPLAYER_BOOL        ; not skipped so FOURPLAYER_BOOL = 0xFF TRUE
 	
-	ldi  ZL, lo8(STATE1)
-	ldi  ZH, hi8(STATE1)
+	ldi  ZL, low(STATE1)
+	ldi  ZH, high(STATE1)
 
 	sei   ; enable interrupts
 	
@@ -357,19 +329,19 @@ undefined_interrupt:
 ; it also has not been double checked
 ; the values might not be accurate
 array:
-	.word array_0, array_1, array_2, array_3
+	.dw array_0, array_1, array_2, array_3
 	
 array_0:
-	.word STATE1, STATE4, STATE7, STATE7
+	.dw STATE1, STATE4, STATE7, STATE7
 	
 array_1:
-	.word STATE2, STATE5, STATE8, STATE8
+	.dw STATE2, STATE5, STATE8, STATE8
 
 array_2:
-	.word STATE3, STATE6, STATE9, STATE9
+	.dw STATE3, STATE6, STATE9, STATE9
 
 array_3:
-	.word STATE3, STATE6, STATE9, STATE9
+	.dw STATE3, STATE6, STATE9, STATE9
 
 ;;---------------------------------------
 ;; BEGINING OF INTERRUPT TRANSITION FUNCTION
@@ -382,8 +354,8 @@ array_3:
 
 ; this may be too slow to use
 END_OF_INTERRUPT_COMPUTE_TRANSITION:
-	ldi  XL, lo8(array)
-	ldi  XH, hi8(array)
+	ldi  XL, low(array)
+	ldi  XH, high(array)
 	mov  r16, NES_PORT1_STATE
 	swap r16
 	andi r16, 0xF
@@ -456,18 +428,18 @@ PLAYER3_CLK_FIRST:
 	rjmp PORT1_CLK_TRANSITION_STATE5
 	
 PORT1_CLK_TRANSITION_STATE2:
-	ldi  ZL, lo8(STATE2)
-	ldi  ZH, hi8(STATE2)
+	ldi  ZL, low(STATE2)
+	ldi  ZH, high(STATE2)
 	reti
 
 PORT1_CLK_TRANSITION_STATE5:
-	ldi  ZL, lo8(STATE5)
-	ldi  ZH, hi8(STATE5)
+	ldi  ZL, low(STATE5)
+	ldi  ZH, high(STATE5)
 	reti
 
 PORT1_CLK_TRANSITION_STATE8:
-	ldi  ZL, lo8(STATE8)
-	ldi  ZH, hi8(STATE8)
+	ldi  ZL, low(STATE8)
+	ldi  ZH, high(STATE8)
 	reti
 
 ID1_CLK:
@@ -486,18 +458,18 @@ ID1_FIRST:
 	rjmp PORT1_CLK_TRANSITION_STATE6
 	
 PORT1_CLK_TRANSITION_STATE3:
-	ldi  ZL, lo8(STATE3)
-	ldi  ZH, hi8(STATE3)
+	ldi  ZL, low(STATE3)
+	ldi  ZH, high(STATE3)
 	reti
 
 PORT1_CLK_TRANSITION_STATE6:
-	ldi  ZL, lo8(STATE6)
-	ldi  ZH, hi8(STATE6)
+	ldi  ZL, low(STATE6)
+	ldi  ZH, high(STATE6)
 	reti
 
 PORT1_CLK_TRANSITION_STATE9:
-	ldi  ZL, lo8(STATE9)
-	ldi  ZH, hi8(STATE9)
+	ldi  ZL, low(STATE9)
+	ldi  ZH, high(STATE9)
 	reti
 	
 ;;---------------------------------
@@ -555,18 +527,18 @@ PLAYER4_CLK_FIRST:
 	rjmp PORT2_CLK_TRANSITION_STATE5
 	
 PORT2_CLK_TRANSITION_STATE4:
-	ldi  ZL, lo8(STATE4)
-	ldi  ZH, hi8(STATE4)
+	ldi  ZL, low(STATE4)
+	ldi  ZH, high(STATE4)
 	reti
 
 PORT2_CLK_TRANSITION_STATE5:
-	ldi  ZL, lo8(STATE5)
-	ldi  ZH, hi8(STATE5)
+	ldi  ZL, low(STATE5)
+	ldi  ZH, high(STATE5)
 	reti
 
 PORT2_CLK_TRANSITION_STATE6:
-	ldi  ZL, lo8(STATE6)
-	ldi  ZH, hi8(STATE6)
+	ldi  ZL, low(STATE6)
+	ldi  ZH, high(STATE6)
 	reti
 
 ID2_CLK:
@@ -585,18 +557,18 @@ ID2_FIRST:
 	rjmp PORT1_CLK_TRANSITION_STATE8
 	
 PORT2_CLK_TRANSITION_STATE7:
-	ldi  ZL, lo8(STATE7)
-	ldi  ZH, hi8(STATE7)
+	ldi  ZL, low(STATE7)
+	ldi  ZH, high(STATE7)
 	reti
 
 PORT2_CLK_TRANSITION_STATE8:
-	ldi  ZL, lo8(STATE8)
-	ldi  ZH, hi8(STATE8)
+	ldi  ZL, low(STATE8)
+	ldi  ZH, high(STATE8)
 	reti
 
 PORT2_CLK_TRANSITION_STATE9:
-	ldi  ZL, lo8(STATE9)
-	ldi  ZH, hi8(STATE9)
+	ldi  ZL, low(STATE9)
+	ldi  ZH, high(STATE9)
 	reti
 ;;---------------------------------
 ;; END OF NES PORT1 CLK INTERRUPT
@@ -628,11 +600,11 @@ LATCH:
 	ldi  ID2_BITS, 0x20
 	
 LATCH_LOW:
-	ldi  ZL, lo8(STATE1)
-	ldi  ZH, hi8(STATE1)
+	ldi  ZL, low(STATE1)
+	ldi  ZH, high(STATE1)
 	reti
 ;;---------------------------------
 ;; END OF NES LATCH INTERRUPT
 ;;---------------------------------
 
-.section .data ;.dseg
+.dseg
