@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name "openfourplayer168")(type "KiCad")(uri "${KIPRJMOD}/openfourplayer168.pretty")(options "")(descr ""))
+)

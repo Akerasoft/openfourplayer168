@@ -1,0 +1,5 @@
+(sym_lib_table
+  (lib (name "openfourplayer168_Library")(type "KiCad")(uri "${KIPRJMOD}/openfourplayer168_Library.kicad_sym")(options "")(descr ""))
+  (lib (name "atmega168p-20p")(type "KiCad")(uri "${KIPRJMOD}/atmega168p-20p.kicad_sym")(options "")(descr ""))
+  (lib (name "atmega168p-20p-openfourplayer168")(type "KiCad")(uri "${KIPRJMOD}/atmega168p-20p-openfourplayer168.kicad_sym")(options "")(descr ""))
+)
