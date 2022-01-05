@@ -7,24 +7,24 @@
 ;
 
 ; PIN D / PORT D
-#define NES_PORT1_CLK     2
-#define NES_PORT2_CLK     3
-#define NES_LATCH         4
-#define FOURPLAYER_ENABLE 5
-#define NES_PORT1_DATA    6
-#define NES_PORT2_DATA    7
+#define NES_PORT1_CLK     PD2
+#define NES_PORT2_CLK     PD3
+#define NES_LATCH         PD4
+#define FOURPLAYER_ENABLE PD5
+#define NES_PORT1_DATA    PD6
+#define NES_PORT2_DATA    PD7
 
 ; PIN B / PORT B
-#define CTRL1_CLK         0
-#define CTRL1_DATA        1
+#define CTRL1_CLK         PB0
+#define CTRL1_DATA        PB1
 
 ; PIN C / PORT C
-#define CTRL2_CLK         0
-#define CTRL2_DATA        1
-#define CTRL3_CLK         2
-#define CTRL3_DATA        3
-#define CTRL4_CLK         4
-#define CTRL4_DATA        5
+#define CTRL2_CLK         PC0
+#define CTRL2_DATA        PC1
+#define CTRL3_CLK         PC2
+#define CTRL3_DATA        PC3
+#define CTRL4_CLK         PC4
+#define CTRL4_DATA        PC5
 
 ; DEDICATED REGISTER VARIABLES
 #define NES_PORT1_STATE   r18
@@ -161,10 +161,10 @@ main:
 	ldi  r16, 0x04          ; enable PCIE2 (PCINT2:PCINT16 to PCINT23)
 	sts  PCICR, r16
 	
-	ldi  r16, 0x10          ; enable PCINT20
+	ldi  r16, (1<<PCINT20)  ; enable PCINT20, which is also pin PD4
 	sts  PCMSK2, r16
 	
-	ldi  r16, 0xB3          ; 0b11000000 ; PD5/PD4/PD3/PD2 - input, PD7/PD6 - output, PD0/PD1 input for safety
+	ldi  r16, (1<<PD7) | (1<<PD6) ; PIN 0..5 input, pin 6..7 output
 	out  DDRD, r16         
 	
 	ldi  r16, 0x15          ; 0b00010101 ; PC5/PC3/PC1 - input, PC4/PC2/PC0 - output, PC7/PC6 input for safety
@@ -173,7 +173,7 @@ main:
 	ldi  r16, 0x01          ; 0b00000001 ; PB0 - output, PB1 - input PB7/PB6/PB5/PB4/PB3/PB2 input for safety
 	out  DDRB, r16
 	
-	ldi  r16, ~0xB3         ; make all inputs high
+	ldi  r16, ~((1<<PD7) | (1<<PD6))         ; make all inputs high
 	out  PORTD, r16
 	
 	ldi  r16, ~0x15         ; make all inputs high
