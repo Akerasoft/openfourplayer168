@@ -60,3 +60,6 @@ dkms.conf
 # Microchip Studio is Visual Studio
 .vs
 Debug
+
+# KiCAD backup files
+*-backups/

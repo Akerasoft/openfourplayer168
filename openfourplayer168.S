@@ -1,5 +1,5 @@
 ;; ATMEGA168
-;; (c) Akerasoft 2021
+;; (c) Akerasoft 2021-2022
 ;; 4 Player Adapter compatible with NES
 ;;
 
@@ -212,8 +212,8 @@ main:
 
 	ldi  NES_PORT1_STATE, 1
 	ldi  NES_PORT2_STATE, 1
-	ldi  ID1_BITS, 0x10
-	ldi  ID2_BITS, 0x20
+	ldi  ID1_BITS, ~0x10
+	ldi  ID2_BITS, ~0x20
 	
 	in   r16, PIND
 	sbrs r16, FOURPLAYER_ENABLE ; skip next statement if FOURPLAYER_ENABLE is HIGH
@@ -624,8 +624,8 @@ LATCH:
 	ser  FOURPLAYER_BOOL        ; not skipped so FOURPLAYER_BOOL = 0xFF TRUE
 	ldi  NES_PORT1_STATE, 1
 	ldi  NES_PORT2_STATE, 1
-	ldi  ID1_BITS, 0x10
-	ldi  ID2_BITS, 0x20
+	ldi  ID1_BITS, ~0x10
+	ldi  ID2_BITS, ~0x20
 	
 LATCH_LOW:
 	ldi  ZL, lo8(STATE1)

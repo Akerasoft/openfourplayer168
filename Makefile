@@ -1,7 +1,7 @@
 # Hey Emacs, this is a -*- makefile -*-
 
 # MCU name
-MCU = atmega168p
+MCU = atmega168
 
 # Processor frequency.
 #     This will define a symbol, F_CPU, in all source code files equal to the 
@@ -25,7 +25,7 @@ MCU = atmega168p
 # recommended is F_CPU = 20000000
 # but I have not set up this crystal yet, nor did I program the fuses.
 
-F_CPU = 8000000
+F_CPU = 20000000
 
 OBJDIR=.
 
